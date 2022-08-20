@@ -1,0 +1,56 @@
+version "4.5"
+
+class FuckItButton : Weapon replaces BFG9000
+{
+    Default
+    {
+        Weapon.SlotNumber 7;
+        Weapon.SelectionOrder 9999;
+        Inventory.PickupMessage "You got the Fuck It Button!";
+        +WEAPON.AMMO_OPTIONAL
+        +WEAPON.NOALERT
+    }
+
+    States
+    {
+    Spawn:
+        FKWP A -1;
+        Stop;
+    Select:
+        FKIT A 1 A_Raise;
+        Goto Select;
+    Deselect:
+        FKIT A 1 A_Lower;
+        Goto Deselect;
+    Ready:
+        FKIT A 1 A_WeaponReady;
+        Loop;
+    Fire:
+        FKIT AABBCCDDDDDD 2;
+        FKIT E 10 A_StartSound("button/fuckit");
+        FKIT DDCCBBAAAA 2;
+        FKIT AAAAAAAAAAAA 4
+        {
+            if(CheckProximity("Cyberdemon",5000.0,flags:CPXF_SETTARGET|CPXF_ANCESTOR) > 0)
+            {
+                target.bNORADIUSDMG = false;
+            }
+
+            if(CheckProximity("SpiderMastermind",5000.0,flags:CPXF_SETTARGET|CPXF_ANCESTOR) > 0)
+            {
+                target.bNORADIUSDMG = false;
+            }
+
+            A_StartSound("weapons/rocklx");
+            A_Explode(9999,5000,XF_NOTMISSILE,fulldamagedistance:5000);
+            A_QuakeEx(6,6,6,4,0,1024,"");
+        }
+        FKIT A 5 A_QuakeEx(5,5,5,5,0,1024,"");
+        FKIT A 5 A_QuakeEx(4,4,4,5,0,1024,"");
+        FKIT A 5 A_QuakeEx(3,3,3,5,0,1024,"");
+        FKIT A 5 A_QuakeEx(2,2,2,5,0,1024,"");
+        FKIT A 5 A_QuakeEx(1,1,1,5,0,1024,"");
+        FKIT A 10;
+        Goto Ready;
+    }
+}
